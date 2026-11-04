@@ -14,7 +14,7 @@ Vue 3、TypeScript、ArcGIS Maps SDK 与 Node.js 实现的 WebGIS 项目。提�
 | 区域 | 随项目提供的 GeoJSON | GeoServer WFS |
 | 土地利用 | 306 张本地 PNG 瓦片 | GeoServer WMTS |
 | 后端 | 无 | Node + 自行配置的 GeoServer |
-| 底图 | 可配置 ArcGIS Key | 可配置 ArcGIS Key |
+| 底图 | 高德标准底图／本地专题底板 | 高德标准底图／本地专题底板 |
 
 本项目定位为生态资源可视化作品。现有区域指标为项目数据快照，未在本次发布中独立核实来源年份与统计口径；不应作为现势官方统计或决策结论。土地利用图层目前用于显示，不包含实时面积计算或变化分析。
 
@@ -27,7 +27,7 @@ npm ci
 npm run dev:demo
 ```
 
-打开终端显示的地址，路径为 `/dabieshan/`。此模式不需要 Node 业务服务或 GeoServer。无需 Key 即可显示行政区与专题数据；ArcGIS 在线底图需按下文配置。
+打开终端显示的地址，路径为 `/dabieshan/`。此模式不需要 Node 业务服务或 GeoServer。默认显示高德标准底图；也可切换到本地专题底板，不需要申请 Key。
 
 构建与预览：
 
@@ -51,13 +51,15 @@ npm run preview
 
 账号系统采用配置密码和内存会话，尚无用户注册、密码哈希、会话到期、限流或角色权限；Node 重启会清空会话。此实现供本地学习与联调，不是完整的公网账号系统。
 
-## 配置 ArcGIS 底图
+## 底图与坐标
 
-复制 `.env.example` 为 `.env.local`，填写 `VITE_ARCGIS_API_KEY`，重启 Vite。申请 ArcGIS Location Platform 的 Basemap styles service 权限，并限制允许的来源。当前提供浅灰底图与卫星影像。
+当前采用高德官方自定义瓦片示例中的标准栅格服务，通过 ArcGIS 自定义瓦片层显示，不调用高德 JS API，也不使用 JS API Key 或安全密钥。底图切换可选择高德标准底图或本地专题底板。署名保留在地图中。
 
-Pages 使用仓库 Actions Secret `ARCGIS_API_KEY`。Key 不提交到源码，但 Vite 的浏览器 Key 会进入最终前端产物，应设置来源限制并按服务商规则管理配额和有效期。未配置时显示本地专题底板。
+高德瓦片采用 GCJ-02，项目区域与土地利用数据采用 WGS84/Web Mercator。amapRasterLayer.ts 对每个目标像素计算对应的 GCJ-02 源像素，重采样底图，保留原始区域与土地利用数据不变。转换属于显示用近似，不作为测量或坐标成果；尚未经过控制点精度验收。网络失败时可手动切换本地专题底板。
 
-`VITE_GEOSERVER_BASE` 默认留空，通过 Node 代理访问；自行填写远程 GeoServer 地址会绕过本机 Node 代理，请明确其认证方式和 CORS 配置。
+用户提供的 JS API 凭据仅保存在被忽略的 .env.local 和 GitHub Actions Secrets，当前栅格实现不读取、不打包这些凭据。以后若切换到官方 JS API 引擎，需要单独接入并配置允许域名。
+
+VITE_GEOSERVER_BASE 默认留空，通过 Node 代理访问；自行填写远程 GeoServer 地址会绕过本机 Node 代理，请明确其认证方式和 CORS 配置。
 
 ## GitHub Pages
 

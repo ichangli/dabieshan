@@ -12,7 +12,8 @@
     "type-check": "vue-tsc --build",
     "server": "node --env-file-if-exists=server/.env server/server.js",
     "dev:full": "run-p server dev",
-    "dev:demo": "vite --mode demo"
+    "dev:demo": "vite --mode demo",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@arcgis/core": "^5.0.19",

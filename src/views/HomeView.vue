@@ -220,8 +220,8 @@ async function doExport() {
         <div class="basemap-selector">
           <span v-if="!HAS_ONLINE_BASEMAP">本地专题底板</span>
           <select v-else v-model="currentBasemap" @change="selectBasemap(currentBasemap)">
-            <option value="vector">🗺️ ArcGIS 浅色底图</option>
-            <option value="image">🛰️ ArcGIS 卫星影像</option>
+            <option value="vector">🗺️ 高德标准底图</option>
+            <option value="image">🌿 本地专题底板</option>
           </select>
         </div>
 
