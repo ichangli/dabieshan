@@ -45,7 +45,7 @@ npm run preview
 3. 启动本机 GeoServer（默认 localhost:8080）。在 `tif` 工作区发布 17 个与 `src/composables/config.ts` 中 REGIONS 同名的区域 WFS 图层，以及 `tif:cutting` WMTS。区域属性字段见 `public/data/regions` 示例；原始栅格与 GeoServer 数据目录没有包含在本仓库，需要自行提供。
 4. 执行 `npm run dev:full`，打开 Vite 输出的根地址。
 
-也可以分别运行 `npm run server` 和 `npm run dev`。Node 仅使用内置模块，默认绑定 127.0.0.1:3200。未创建 server/.env 时，本机示例账号为 admin，密码为 change-me-locally。
+也可以分别运行 `npm run server` 和 `npm run dev`。Node 仅使用内置模块，默认绑定 127.0.0.1:3200。未创建 server/.env 时，本机示例账号为 admin，密码为 123456。
 
 请求链：浏览器 → Vite 开发代理 → Node（校验 Token）→ GeoServer。Node 不负责托管生产 dist；Vite 开发代理不会随构建产物发布。自行部署完整服务时需要配置同源静态托管与反向代理。
 

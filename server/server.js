@@ -2,7 +2,7 @@ import http from 'node:http'
 import { randomUUID } from 'node:crypto'
 
 const ACCOUNTS = Object.freeze({
-    [process.env.ADMIN_ACCOUNT || 'admin']: process.env.ADMIN_PASSWORD || 'change-me-locally'
+    [process.env.ADMIN_ACCOUNT || 'admin']: process.env.ADMIN_PASSWORD || '123456'
 })
 const geoserverHost = process.env.GEOSERVER_HOST || 'localhost'
 const geoserverPort = Number(process.env.GEOSERVER_PORT || 8080)
