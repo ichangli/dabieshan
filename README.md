@@ -6,6 +6,22 @@ Vue 3、TypeScript、ArcGIS Maps SDK 与 Node.js 实现的 WebGIS 项目。提�
 
 [在线演示](https://ichangli.github.io/dabieshan/) · [下载完整源码](https://github.com/ichangli/dabieshan/archive/refs/heads/main.zip) · [数据与依赖](docs/数据与依赖.md)
 
+## 项目展示
+
+以下为本地完整版运行截图，点击图片可查看原始尺寸。在线静态演示无需登录，页面控件与本地版略有区别。
+
+### 林地面积专题
+
+以分级色彩展示各区域林地面积，配合左侧数值排序、区域检索和地图标注，查看区域之间的指标差异。不同区域的面积与行政层级存在差异，图示为总量展示。
+
+[![林地面积专题：区域分色地图与林地面积排序列表](docs/images/forest-area.png)](docs/images/forest-area.png)
+
+### 土地利用分布
+
+叠加土地利用栅格，查看研究区的空间分布细节，支持图层开关与地图缩放。截图中的水资源指标及渐变图例属于独立专题，不是土地利用栅格的分类图例。
+
+[![土地利用分布：彩色土地利用栅格叠加地图，左侧为独立的水资源指标列表](docs/images/land-use.png)](docs/images/land-use.png)
+
 ## 两种运行方式
 
 | | 静态演示 | 完整本地版 |
