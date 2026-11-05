@@ -96,5 +96,6 @@ ${legendColors ? `
     URL.revokeObjectURL(url)
   } catch (e) {
     console.error('导出报告失败', e)
+    throw e
   }
 }

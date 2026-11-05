@@ -2,13 +2,13 @@
 
 [![Build and deploy demo](https://github.com/ichangli/dabieshan/actions/workflows/pages.yml/badge.svg)](https://github.com/ichangli/dabieshan/actions/workflows/pages.yml)
 
-Vue 3、TypeScript、ArcGIS Maps SDK 与 Node.js 实现的 WebGIS 项目。提供 17 个区域的生态指标浏览、检索定位、专题着色、土地利用图层、二维码分享及 PDF 报告导出。
+Vue 3、TypeScript、ArcGIS Maps SDK 与 Node.js 实现的 WebGIS 项目。提供 17 个区域的生态指标浏览、检索定位、专题着色、土地利用图层、二维码分享及 HTML 报告导出。地图工作台采用可收起侧栏，摘要随当前指标动态展示区域均值、最高值及对应地区。
 
 [在线演示](https://ichangli.github.io/dabieshan/) · [下载完整源码](https://github.com/ichangli/dabieshan/archive/refs/heads/main.zip) · [数据与依赖](docs/数据与依赖.md)
 
 ## 项目展示
 
-以下为静态演示版实际运行截图，以 2 倍像素密度截取，分辨率为 3840 × 2160。点击图片可查看高清原图。
+以下为此前静态演示版的功能截图，分辨率为 3840 × 2160。当前界面已更新为地图工作台，布局与配色以在线演示为准。点击图片可查看高清原图。
 
 ### 林地面积专题
 
@@ -30,7 +30,7 @@ Vue 3、TypeScript、ArcGIS Maps SDK 与 Node.js 实现的 WebGIS 项目。提�
 | 区域 | 随项目提供的 GeoJSON | GeoServer WFS |
 | 土地利用 | 306 张本地 PNG 瓦片 | GeoServer WMTS |
 | 后端 | 无 | Node + 自行配置的 GeoServer |
-| 底图 | 高德标准底图／本地专题底板 | 高德标准底图／本地专题底板 |
+| 底图 | Esri 地形底图／高德标准底图 | Esri 地形底图／高德标准底图 |
 
 本项目定位为生态资源可视化作品。现有区域指标为项目数据快照，未在本次发布中独立核实来源年份与统计口径；不应作为现势官方统计或决策结论。土地利用图层目前用于显示，不包含实时面积计算或变化分析。
 
@@ -43,7 +43,7 @@ npm ci
 npm run dev:demo
 ```
 
-打开终端显示的地址，路径为 `/dabieshan/`。此模式不需要 Node 业务服务或 GeoServer。默认显示高德标准底图；也可切换到本地专题底板，不需要申请 Key。
+打开终端显示的地址，路径为 `/dabieshan/`。此模式不需要 Node 业务服务或 GeoServer。默认显示 Esri 地形底图，可切换到高德标准底图；在线底图需要网络连接。
 
 构建与预览：
 
@@ -69,9 +69,9 @@ npm run preview
 
 ## 底图与坐标
 
-当前采用高德官方自定义瓦片示例中的标准栅格服务，通过 ArcGIS 自定义瓦片层显示，不调用高德 JS API，也不使用 JS API Key 或安全密钥。底图切换可选择高德标准底图或本地专题底板。署名保留在地图中。
+默认采用 [Esri World Topographic Map](https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer)，通过 ArcGIS TileLayer 加载，并仅在底图层上适度降低亮度和饱和度。高德标准底图作为可选项，采用官方自定义瓦片示例中的标准栅格服务，通过 ArcGIS 自定义瓦片层显示，不调用高德 JS API。地图保留服务来源署名。
 
-高德瓦片采用 GCJ-02，项目区域与土地利用数据采用 WGS84/Web Mercator。amapRasterLayer.ts 对每个目标像素计算对应的 GCJ-02 源像素，重采样底图，保留原始区域与土地利用数据不变。转换属于显示用近似，不作为测量或坐标成果；尚未经过控制点精度验收。网络失败时可手动切换本地专题底板。
+Esri 地形底图采用 Web Mercator。高德瓦片采用 GCJ-02，项目区域与土地利用数据采用 WGS84/Web Mercator。amapRasterLayer.ts 对每个目标像素计算对应的 GCJ-02 源像素，重采样高德底图，保留原始区域与土地利用数据不变。转换属于显示用近似，不作为测量或坐标成果；尚未经过控制点精度验收。
 
 用户提供的 JS API 凭据仅保存在被忽略的 .env.local 和 GitHub Actions Secrets，当前栅格实现不读取、不打包这些凭据。以后若切换到官方 JS API 引擎，需要单独接入并配置允许域名。
 

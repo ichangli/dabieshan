@@ -40,6 +40,7 @@ export interface EcoData {
 
 export function useRegionLayers() {
   const ecoDataList = ref<EcoData[]>([])
+  const ecoDataLoading = ref(true)
   const regionLayers: Record<string, GeoJSONLayer> = {}
 
   function loadRegionLayers(map: Map) {
@@ -47,8 +48,8 @@ export function useRegionLayers() {
       type: 'simple',
       symbol: {
         type: 'simple-fill',
-        color: [46, 139, 87, 0.3],
-        outline: { color: [34, 85, 51], width: 1 }
+        color: [137, 166, 121, 0.23],
+        outline: { color: [102, 131, 91, 0.75], width: 0.9 }
       }
     } as any
 
@@ -66,13 +67,13 @@ export function useRegionLayers() {
         labelingInfo: [{
           labelExpressionInfo: { expression: `'${name}'` },
           labelPlacement: 'always-horizontal',
-          deconflictionStrategy: 'none',
+          deconflictionStrategy: 'static',
           symbol: {
             type: 'text',
-            color: '#1a4d2e',
-            font: { family: 'sans-serif', size: 10, weight: 'bold' },
-            haloColor: 'white',
-            haloSize: 1.2,
+            color: '#29433a',
+            font: { family: 'sans-serif', size: 9, weight: 'bold' },
+            haloColor: 'rgba(255,255,255,0.95)',
+            haloSize: 1,
             verticalAlignment: 'middle',
             horizontalAlignment: 'center',
           }
@@ -89,31 +90,36 @@ export function useRegionLayers() {
   }
 
   async function buildEcoDataList() {
+    ecoDataLoading.value = true
     const data: EcoData[] = []
-    for (const name of REGIONS) {
-      const layer = regionLayers[name]
-      if (!layer) continue
-      try {
-        const query = layer.createQuery()
-        query.where = '1=1'
-        query.outFields = ['*']
-        query.num = 1
-        const result = await layer.queryFeatures(query)
-        if (result.features.length > 0 && result.features[0]) {
-          const a = result.features[0].attributes ?? {}
-          data.push({
-            name,
-            forest: { coverage: a.forest_cov, forestArea: a.forest_are, mainTypes: a.forest_typ },
-            water: { totalWater: a.water_tota, perCapitaWater: a.water_per_ },
-            climate: { climateType: a.climate_ty, avgTemp: a.climate_av, avgPrecipitation: a.climate_pr, avgSunshine: a.climate_su, frostFreeDays: a.climate_fr },
-            wetland: { wetlandArea: a.wetland_ar },
-            mineral: { types: a.mineral_ty, reserves: a.mineral_re },
-          })
-        }
-      } catch (e) { console.warn('读取区域数据失败', name, e) }
+    try {
+      for (const name of REGIONS) {
+        const layer = regionLayers[name]
+        if (!layer) continue
+        try {
+          const query = layer.createQuery()
+          query.where = '1=1'
+          query.outFields = ['*']
+          query.num = 1
+          const result = await layer.queryFeatures(query)
+          if (result.features.length > 0 && result.features[0]) {
+            const a = result.features[0].attributes ?? {}
+            data.push({
+              name,
+              forest: { coverage: a.forest_cov, forestArea: a.forest_are, mainTypes: a.forest_typ },
+              water: { totalWater: a.water_tota, perCapitaWater: a.water_per_ },
+              climate: { climateType: a.climate_ty, avgTemp: a.climate_av, avgPrecipitation: a.climate_pr, avgSunshine: a.climate_su, frostFreeDays: a.climate_fr },
+              wetland: { wetlandArea: a.wetland_ar },
+              mineral: { types: a.mineral_ty, reserves: a.mineral_re },
+            })
+          }
+        } catch (e) { console.warn('读取区域数据失败', name, e) }
+      }
+      ecoDataList.value = data.sort((a, b) => (b.forest?.coverage ?? 0) - (a.forest?.coverage ?? 0))
+      console.log('GeoServer 数据加载完成:', ecoDataList.value.length, '个区域，页面打开后', Math.round(performance.now()), 'ms')
+    } finally {
+      ecoDataLoading.value = false
     }
-    ecoDataList.value = data.sort((a, b) => (b.forest?.coverage ?? 0) - (a.forest?.coverage ?? 0))
-    console.log('GeoServer 数据加载完成:', ecoDataList.value.length, '个区域，页面打开后', Math.round(performance.now()), 'ms')
   }
 
   async function zoomToRegion(name: string, mapView: MapView) {
@@ -142,5 +148,5 @@ export function useRegionLayers() {
     }
   }
 
-  return { regionLayers, ecoDataList, loadRegionLayers, buildEcoDataList, zoomToRegion }
+  return { regionLayers, ecoDataList, ecoDataLoading, loadRegionLayers, buildEcoDataList, zoomToRegion }
 }
