@@ -16,11 +16,11 @@ Vue 3、TypeScript、ArcGIS Maps SDK 与 Node.js 实现的 WebGIS 项目。提�
 
 [![登录页面：山峦等高线插画与卡片式账号登录表单](docs/images/login-hd.png)](docs/images/login-hd.png)
 
-### 水资源总量专题
+### 专题图与区域对比
 
-以连续色阶展示 17 个区域的水资源总量，配合区域排名、检索定位与地图标注。专题摘要随指标切换，展示区域均值、最大值及对应地区；不同区域的面积与行政层级存在差异，图示为总量展示。
+支持切换多项生态指标，通过连续色阶呈现 17 个区域的空间差异。专题切换时，地图配色、图例、区域排名与数据摘要同步更新，展示区域均值、最大值及对应地区，并支持区域检索定位与地图标注。下图为专题图功能示例。
 
-[![水资源总量专题：分色地图、区域排名和联动数据摘要](docs/images/water-resources-hd.png)](docs/images/water-resources-hd.png)
+[![专题图功能示例：指标切换、分色地图、区域排名与联动数据摘要](docs/images/water-resources-hd.png)](docs/images/water-resources-hd.png)
 
 ### 土地利用分布
 
